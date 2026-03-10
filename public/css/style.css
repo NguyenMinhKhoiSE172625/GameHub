@@ -391,6 +391,56 @@ a {
   z-index: 1;
 }
 
+/* ========== TAB BAR ========== */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px;
+  width: fit-content;
+}
+
+.tab-btn {
+  padding: 10px 28px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(236, 72, 153, 0.08);
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white;
+  box-shadow: 0 2px 12px rgba(236, 72, 153, 0.4);
+}
+
+.tab-btn .tab-count {
+  background: rgba(255,255,255,0.2);
+  padding: 1px 8px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+
+.tab-btn.active .tab-count {
+  background: rgba(255,255,255,0.25);
+}
+
 /* ========== GAME GRID ========== */
 .games-grid {
   display: grid;

@@ -3,6 +3,7 @@ let games = [];
 let token = localStorage.getItem('admin_token') || null;
 let currentView = 'home'; // home | detail | admin
 let partCount = 1;
+let activeTab = 'game'; // 'game' | 'software'
 
 // Detect mode: local (admin) vs deployed (read-only)
 const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -49,6 +50,7 @@ async function loadGames() {
       const res = await fetch(GITHUB_RAW_URL + '?t=' + Date.now());
       games = await res.json();
     }
+    updateTabCounts();
     renderGames();
     if (currentView === 'admin') renderAdminList();
   } catch {
@@ -56,39 +58,67 @@ async function loadGames() {
   }
 }
 
-function renderGames() {
-  const grid = document.getElementById('gamesGrid');
-  const empty = document.getElementById('emptyState');
-  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tabGame').classList.toggle('active', tab === 'game');
+  document.getElementById('tabSoftware').classList.toggle('active', tab === 'software');
+  document.getElementById('searchInput').placeholder = tab === 'game' ? 'Tìm game...' : 'Tìm software...';
+  renderGames();
+  if (currentView === 'admin') {
+    document.getElementById('adminTitle').textContent = tab === 'game' ? '⚙️ Quản lý Games' : '⚙️ Quản lý Software';
+    renderAdminList();
+  }
+}
 
-  let filtered = games;
+function updateTabCounts() {
+  const gc = games.filter(g => (g.type || 'game') === 'game').length;
+  const sc = games.filter(g => (g.type || 'game') === 'software').length;
+  document.getElementById('countGame').textContent = gc;
+  document.getElementById('countSoftware').textContent = sc;
+}
+
+function getFilteredItems() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  let filtered = games.filter(g => (g.type || 'game') === activeTab);
   if (query) {
-    filtered = games.filter(g =>
+    filtered = filtered.filter(g =>
       g.name.toLowerCase().includes(query) ||
       (g.genres || []).some(t => t.toLowerCase().includes(query))
     );
   }
+  return { filtered, query };
+}
+
+function renderGames() {
+  const grid = document.getElementById('gamesGrid');
+  const empty = document.getElementById('emptyState');
+  const { filtered, query } = getFilteredItems();
+  const icon = activeTab === 'game' ? '🎮' : '💻';
+  const label = activeTab === 'game' ? 'game' : 'software';
 
   if (filtered.length === 0) {
     grid.innerHTML = '';
     empty.style.display = 'block';
     if (query) {
-      empty.querySelector('h3').textContent = 'Không tìm thấy game';
+      empty.querySelector('h3').textContent = 'Không tìm thấy ' + label;
       empty.querySelector('p').textContent = `Không có kết quả cho "${query}"`;
     } else {
-      empty.querySelector('h3').textContent = 'Chưa có game nào';
-      empty.querySelector('p').textContent = 'Admin hãy đăng nhập để thêm game mới';
+      empty.querySelector('h3').textContent = 'Chưa có ' + label + ' nào';
+      empty.querySelector('p').textContent = 'Admin hãy đăng nhập để thêm mới';
     }
+    empty.querySelector('.empty-icon').textContent = icon;
     return;
   }
 
   empty.style.display = 'none';
-  grid.innerHTML = filtered.map(g => `
+  grid.innerHTML = filtered.map(g => {
+    const placeholder = (g.type || 'game') === 'software' ? '💻' : '🎮';
+    return `
     <div class="game-card" onclick="showDetail('${g.id}')">
       <div class="card-img-wrapper">
         ${g.image
-          ? `<img class="card-image" src="${escHtml(g.image)}" alt="${escHtml(g.name)}" onerror="this.outerHTML='<div class=\\'card-placeholder\\'>🎮</div>'">`
-          : '<div class="card-placeholder">🎮</div>'
+          ? `<img class="card-image" src="${escHtml(g.image)}" alt="${escHtml(g.name)}" onerror="this.outerHTML='<div class=\\'card-placeholder\\'>${placeholder}</div>'">`
+          : `<div class="card-placeholder">${placeholder}</div>`
         }
         <span class="card-parts-count">${g.parts?.length || 0} nguồn</span>
         <span class="card-source">${escHtml(g.source || '')}</span>
@@ -102,7 +132,7 @@ function renderGames() {
         </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function filterGames() {
@@ -155,6 +185,7 @@ function showDetail(id) {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('adminView').style.display = 'none';
   document.getElementById('detailView').style.display = 'block';
+  document.getElementById('tabBar').style.display = 'none';
   currentView = 'detail';
   window.scrollTo(0, 0);
 
@@ -252,6 +283,7 @@ function copyPassword(gameId, event) {
 // ========== HOME VIEW ==========
 function showHome() {
   document.getElementById('homeView').style.display = 'block';
+  document.getElementById('tabBar').style.display = 'flex';
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('adminView').style.display = 'none';
   currentView = 'home';
@@ -330,18 +362,23 @@ function showAdminView() {
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('adminView').style.display = 'block';
+  document.getElementById('tabBar').style.display = 'flex';
   document.getElementById('btnAdmin').classList.add('active');
   currentView = 'admin';
+  document.getElementById('adminTitle').textContent = activeTab === 'game' ? '⚙️ Quản lý Games' : '⚙️ Quản lý Software';
   renderAdminList();
 }
 
 function renderAdminList() {
   const list = document.getElementById('adminGamesList');
 
-  if (games.length === 0) {
+  const items = games.filter(g => (g.type || 'game') === activeTab);
+  const label = activeTab === 'game' ? 'game' : 'software';
+
+  if (items.length === 0) {
     list.innerHTML = `
       <div style="text-align:center; padding:40px; color:var(--text-muted);">
-        Chưa có game nào. Hãy thêm game mới!
+        Chưa có ${label} nào. Hãy thêm mới!
       </div>`;
     return;
   }
@@ -350,11 +387,14 @@ function renderAdminList() {
     <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
       <button class="btn-danger" style="font-size:0.8rem;" onclick="logout()">🚪 Đăng xuất</button>
     </div>
-  ` + games.map(g => `
+  ` + items.map(g => {
+    const placeholder = (g.type || 'game') === 'software' ? '💻' : '🎮';
+    return `
     <div class="admin-game-item">
       ${g.image
         ? `<img class="admin-game-thumb" src="${escHtml(g.image)}" alt="" onerror="this.style.display='none'">`
-        : `<div class="admin-game-thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🎮</div>`
+        : `<div class="admin-game-thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem;">${placeholder}</div>`
+      }
       }
       <div class="admin-game-info">
         <div class="name">${escHtml(g.name)}</div>
@@ -371,13 +411,13 @@ function renderAdminList() {
         <button class="btn-danger" onclick="deleteGame('${g.id}')">🗑️ Xoá</button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 // ========== ADD / EDIT FORM ==========
 function showAddForm() {
   document.getElementById('adminFormWrapper').style.display = 'block';
-  document.getElementById('formTitle').textContent = 'Thêm Game Mới';
+  document.getElementById('formTitle').textContent = activeTab === 'game' ? 'Thêm Game Mới' : 'Thêm Software Mới';
   document.getElementById('editingId').value = '';
   document.getElementById('gameName').value = '';
   document.getElementById('gameDate').value = new Date().toISOString().slice(0, 10);
@@ -475,7 +515,7 @@ async function saveGame(e) {
 
   const notepadUrl = document.getElementById('gameNotepadUrl').value.trim();
   const autoSync = document.getElementById('gameAutoSync').checked;
-  const body = { name, releaseDate, image, genres, source, description, parts, notepadUrl, autoSync };
+  const body = { name, releaseDate, image, genres, source, description, parts, notepadUrl, autoSync, type: activeTab };
 
   try {
     let res;
@@ -487,7 +527,7 @@ async function saveGame(e) {
 
     if (res.ok) {
       const saved = await res.json();
-      showToast(id ? 'Đã cập nhật game!' : 'Đã thêm game mới!', 'success');
+      showToast(id ? 'Đã cập nhật!' : 'Đã thêm mới!', 'success');
       cancelForm();
       await loadGames();
 

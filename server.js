@@ -127,6 +127,7 @@ app.post('/api/games', authMiddleware, (req, res) => {
     releaseDate: req.body.releaseDate || '',
     genres: req.body.genres || [],
     source: req.body.source || 'linkneverdie.com',
+    type: req.body.type || 'game',
     parts: req.body.parts || [],
     description: req.body.description || '',
     notepadUrl: req.body.notepadUrl || '',
@@ -156,6 +157,7 @@ app.put('/api/games/:id', authMiddleware, (req, res) => {
     description: req.body.description ?? games[idx].description,
     notepadUrl: req.body.notepadUrl ?? games[idx].notepadUrl,
     autoSync: req.body.autoSync ?? games[idx].autoSync,
+    type: req.body.type ?? games[idx].type,
   };
   writeGames(games);
   res.json(games[idx]);
