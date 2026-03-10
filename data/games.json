@@ -1,5 +1,21 @@
 [
   {
+    "id": "081a6f95a7d0daf6",
+    "name": "Adobe Lightroom Classic",
+    "image": "https://hadoantv.com/wp-content/uploads/2024/12/Download-Adobe-Lightroom-Classic-hadoantv-300x200.png",
+    "releaseDate": "2026-03-10",
+    "genres": [],
+    "source": "hadoantv.com",
+    "type": "software",
+    "parts": [],
+    "description": "",
+    "notepadUrl": "https://hadoantvnotepad.com/note/fSZCLP0IIK8WBnRhtfQuRzNZIjG9zV0ckinxDp2G",
+    "autoSync": false,
+    "lastSync": null,
+    "syncStatus": null,
+    "createdAt": "2026-03-10T06:37:54.966Z"
+  },
+  {
     "id": "bd33e3111ae82897",
     "name": "Clip Studio Paint EX",
     "image": "",
