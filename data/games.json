@@ -1,5 +1,21 @@
 [
   {
+    "id": "bd33e3111ae82897",
+    "name": "Clip Studio Paint EX",
+    "image": "",
+    "releaseDate": "2026-03-10",
+    "genres": [],
+    "source": "hadoantv.com",
+    "type": "software",
+    "parts": [],
+    "description": "",
+    "notepadUrl": "https://hadoantvnotepad.com/note/SGvfGf0zKPse31TuZwHi1QIrrvebl3YMEWED0Et1",
+    "autoSync": true,
+    "lastSync": null,
+    "syncStatus": null,
+    "createdAt": "2026-03-10T06:37:15.706Z"
+  },
+  {
     "id": "80922ec72d479001",
     "name": "Adobe After Effects",
     "image": "https://hadoantv.com/wp-content/uploads/2024/12/Download-Adobe-After-Effects-hadoantv.png",
