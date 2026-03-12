@@ -7,12 +7,21 @@
     "genres": [],
     "source": "hadoantv.com",
     "type": "game",
-    "parts": [],
+    "parts": [
+      {
+        "name": "Google Drive",
+        "url": "https://www.filecrypt.cc/Container/E8322CF898.html"
+      },
+      {
+        "name": "Google Drive",
+        "url": "https://www.filecrypt.cc/Container/22FC3484DF.html"
+      }
+    ],
     "description": "",
     "notepadUrl": "https://hadoantvnotepad.com/note/tTYGdl4qgGTnxxnTsH0sYhkEKnUsSy691eEw7tyi",
     "autoSync": true,
-    "lastSync": null,
-    "syncStatus": null,
+    "lastSync": "2026-03-12T06:21:04.296Z",
+    "syncStatus": "success",
     "createdAt": "2026-03-12T06:21:00.492Z"
   },
   {
