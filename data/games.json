@@ -1,5 +1,21 @@
 [
   {
+    "id": "f39294a692835d7d",
+    "name": "Resident Evil 3",
+    "image": "https://i.ytimg.com/vi/Pvwdy38_vlo/maxresdefault.jpg",
+    "releaseDate": "2026-03-26",
+    "genres": [],
+    "source": "hadoantv.com",
+    "type": "game",
+    "parts": [],
+    "description": "",
+    "notepadUrl": "https://hadoantvnotepad.com/note/zdmlK2DlBGrS5szINHqbqxcmqKII0axNp3sK0Ckg",
+    "autoSync": false,
+    "lastSync": null,
+    "syncStatus": null,
+    "createdAt": "2026-03-26T07:27:54.240Z"
+  },
+  {
     "id": "8c04e7bc2f282926",
     "name": "RE2",
     "image": "https://cdn-media.sforum.vn/storage/app/media/vantien/huskyflyaway/resident-evil-2-remake-ra-mat-tren-ios-1.jpg",
